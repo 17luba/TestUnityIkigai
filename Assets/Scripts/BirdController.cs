@@ -14,6 +14,14 @@ public class BirdController : MonoBehaviour
 
     private Animator animator;
 
+    private enum WallSide
+    {
+        Left,
+        Right
+    }
+
+    private WallSide lastWallTouched;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,12 +44,28 @@ public class BirdController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("wall"))
         {
+            // Désactiver les pikes de la dernière paroi touchée
+            if (lastWallTouched == WallSide.Left)
+            {
+                GameManager.Instance.HideLeftSpikes();
+            }
+            else
+            {
+                GameManager.Instance.HideRightSpikes();
+            }
+
+            // Inverser la direction
             direction.x *= -1;
             Flip();
 
-            bool hittingRightWall = direction.x < 0;
+            // Déterminer le nouveau mur opposé
+            bool hittingRightWall = direction.x < 0; // Rebondire à gauche => vient du mur droit
             GameManager.Instance.ActiveRandomSpikes(!hittingRightWall);
 
+            // Mettre à jour le dernier mur touché
+            lastWallTouched = hittingRightWall ? WallSide.Right : WallSide.Left;
+
+            // Score
             GameManager.Instance.AddScore();
         }
 
@@ -66,11 +90,11 @@ public class BirdController : MonoBehaviour
         rb.gravityScale = 1;
         animator.SetTrigger("IsDead");
         GameManager.Instance.ShowGameOver();
-        Invoke(nameof(ReloadScene), 5f);
+        // Invoke(nameof(ReloadScene), 5f);
     }
 
-    void ReloadScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+    //void ReloadScene()
+    //{
+    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    //}
 }
