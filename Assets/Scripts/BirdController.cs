@@ -12,9 +12,12 @@ public class BirdController : MonoBehaviour
     private Vector2 direction = Vector2.right;
     private bool facingRight = true;
 
+    private Animator animator;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -35,6 +38,11 @@ public class BirdController : MonoBehaviour
         {
             direction.x *= -1;
             Flip();
+
+            bool hittingRightWall = direction.x < 0;
+            GameManager.Instance.ActiveRandomSpikes(!hittingRightWall);
+
+            GameManager.Instance.AddScore();
         }
 
         if (collision.gameObject.CompareTag("spike"))
@@ -56,8 +64,8 @@ public class BirdController : MonoBehaviour
         isDead = true;
         rb.velocity = Vector2.zero;
         rb.gravityScale = 1;
+        animator.SetTrigger("IsDead");
         GameManager.Instance.ShowGameOver();
-
         Invoke(nameof(ReloadScene), 5f);
     }
 
