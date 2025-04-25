@@ -835,18 +835,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1514712271239164050, guid: fe6d01621ccd87e49b120660f179e93c, type: 3}
   m_PrefabInstance: {fileID: 447399229}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &447399231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 447399230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 975f4f147519cd4459e28861f17f48e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &447399236
 Rigidbody2D:
   serializedVersion: 4
@@ -868,6 +856,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &447399237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447399230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 975f4f147519cd4459e28861f17f48e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &472402269
 GameObject:
   m_ObjectHideFlags: 0
@@ -1815,18 +1815,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &572101876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 572101860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e8deb04d15ffb43b975599c2a64a0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &624503931
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2999,6 +2987,7 @@ MonoBehaviour:
   candyPrefabs: {fileID: 447399230}
   candyPrefab: {fileID: 447399230}
   spawnDelay: 0.5
+  minDistanceBetweenCandies: 2.5
 --- !u!4 &1407110540
 Transform:
   m_ObjectHideFlags: 0
