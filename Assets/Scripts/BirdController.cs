@@ -63,6 +63,7 @@ public class BirdController : MonoBehaviour
             // Determiner le mur actuel
             WallSide currentWall = (collision.transform.position.x < 0) ? WallSide.Left : WallSide.Right;
 
+
             if (lastWallTouched != WallSide.None && lastWallTouched != currentWall)
             {
                 // Désactiver les pikes de la dernière paroi touchée
@@ -112,14 +113,36 @@ public class BirdController : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return;
+
         isDead = true;
         rb.velocity = Vector2.zero;
         rb.gravityScale = 1;
         animator.SetTrigger("IsDead");
         GameManager.Instance.ShowGameOver();
+        GameManager.Instance.PlaySound(GameManager.Instance.deathSound);
         // Invoke(nameof(ReloadScene), 5f);
 
-        GameManager.Instance.PlaySound(GameManager.Instance.deathSound);
+       // Appliquer le rebon aleatoire
+        rb.velocity = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+
+        // Desactiver la collision après 3s
+        Invoke(nameof(DisableCollision), 3f);
+
+        // Geler la physique après 8s
+        Invoke(nameof(DisablePhysics), 8f);
+
+    }
+
+    void DisableCollision()
+    {
+        GetComponent<Collider2D>().enabled = false;
+    }
+
+    void DisablePhysics()
+    {
+        rb.velocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Static;
     }
 
     //void ReloadScene()

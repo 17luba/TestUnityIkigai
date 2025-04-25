@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Gestion de son")]
     public AudioSource audioSource;
-    public AudioClip jumpSound, wallHitSound, deathSound, startSound;
+    public AudioClip jumpSound, wallHitSound, deathSound, startSound, CandySound;
 
     [Header("Gestion de dificulté")]
     private float bouncesCount = 0f;
@@ -35,6 +35,18 @@ public class GameManager : MonoBehaviour
     public float difficultyIncrementEvery = 5f;
     public float speedIncreaseAmount = 0.5f;
     private float baseSpeed = 5;
+
+    [Header("Gestion de bonbons")]
+    public GameObject candyPrefabs;
+    private GameObject currentCandy;
+
+    // Coroutine pour le spawn de bonbons
+    [SerializeField] private GameObject candyPrefab;
+    [SerializeField] private float spawnDelay = 0.5f;
+
+    // Distance entre les bonbons
+    private Vector2 lastCandyPosition = Vector2.zero;
+    public float minDistanceBetweenCandies = 2.5f;
 
 
     void Awake()
@@ -63,6 +75,56 @@ public class GameManager : MonoBehaviour
         // Gestion de difficulté
         // baseSpeed = BirdController.Instance.horizontalSpeed;
         // currentSpikesToActivate = baseSpikesToActivate;
+    }
+
+    // Gestion des bonbons
+    public void TrySpawnCandy()
+    {
+        if (currentCandy != null) return;
+
+        Vector2 spawnPos = GetSafCandyPosition();
+        currentCandy = Instantiate(candyPrefabs, spawnPos, Quaternion.identity);
+        Candy.Instance.gameObject.SetActive(true);
+    }
+
+    private Vector2 GetSafCandyPosition()
+    {
+        float margin = 1.5f;
+        float minX = Camera.main.ViewportToWorldPoint(new Vector3(0, 0)).x + margin;
+        float maxX = Camera.main.ViewportToWorldPoint(new Vector3(1, 0)).x - margin;
+        float minY = Camera.main.ViewportToWorldPoint(new Vector3(0, 0)).y + margin;
+        float maxY = Camera.main.ViewportToWorldPoint(new Vector3(0, 1)).y - margin;
+
+        Vector2 candidatePosition;
+        int safetyCounter = 0;
+
+        do
+        {
+            candidatePosition = new Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
+            safetyCounter++;
+        }
+        while (Vector2.Distance(candidatePosition, lastCandyPosition) < minDistanceBetweenCandies && safetyCounter < 50);
+
+        lastCandyPosition = candidatePosition;
+
+        return candidatePosition;
+    }
+
+
+    // Gestion bonbons 2
+    public void SpawnNewCandy()
+    {
+        Vector3 spawnPosition = GetRandomCandyPosition();
+        Instantiate(candyPrefab, spawnPosition, Quaternion.identity);
+        Candy.Instance.gameObject.SetActive(true);
+    }
+
+    private Vector3 GetRandomCandyPosition()
+    {
+        float y = Random.Range(-3f, 3f);
+        float x = -2f;
+   
+        return new Vector3(x, y, 0f);
     }
 
     public void ShowGameOver()
@@ -126,8 +188,21 @@ public class GameManager : MonoBehaviour
 
     public void AddScore()
     {
-        score++;
+        // score++;
+        // UpdateScoreText();
+        IncreaseScore(1);
+    }
+
+    //public void ClearCandy()
+    //{
+    //    currentCandy = null;
+    //}
+
+    public void IncreaseScore(int amount)
+    {
+        score += amount;
         UpdateScoreText();
+        currentCandy = null; // Détruire le bonbon après l'avoir mangé
     }
 
     private void UpdateScoreText()
