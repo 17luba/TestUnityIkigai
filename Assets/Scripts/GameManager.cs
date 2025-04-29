@@ -34,19 +34,14 @@ public class GameManager : MonoBehaviour
 
     public float difficultyIncrementEvery = 5f;
     public float speedIncreaseAmount = 0.5f;
-    private float baseSpeed = 5;
 
     [Header("Gestion de bonbons")]
     public GameObject candyPrefabs;
     private GameObject currentCandy;
+    public Transform[] spawnPoints;
 
-    // Coroutine pour le spawn de bonbons
-    [SerializeField] private GameObject candyPrefab;
-    [SerializeField] private float spawnDelay = 0.5f;
+    int lastIndex = -1;
 
-    // Distance entre les bonbons
-    private Vector2 lastCandyPosition = Vector2.zero;
-    public float minDistanceBetweenCandies = 2.5f;
 
 
     void Awake()
@@ -59,80 +54,61 @@ public class GameManager : MonoBehaviour
         score = 0;
         HideSpikes();
         UpdateScoreText();
-        // gameOverText.gameObject.SetActive(false);
+
+        // PlayerPrefs.DeleteKey("BestScore");
 
         // Afficher le meilleur score
         int best = PlayerPrefs.GetInt("BestScore", 0);
         bestScoreText.text = $"Best score : {best}";
         bestScoreText.gameObject.SetActive(false);
 
-        // bestScoreText.text = $"Best score : {PlayerPrefs.GetInt("BestScore", 0)}";
-
         replayButton.SetActive(false);
 
         PlaySound(startSound);
 
-        // Gestion de difficulté
-        // baseSpeed = BirdController.Instance.horizontalSpeed;
-        // currentSpikesToActivate = baseSpikesToActivate;
+        SpawnCandyAtRandomPoint();
     }
 
     // Gestion des bonbons
-    public void TrySpawnCandy()
+    public void SpawnCandyAtRandomPoint()
     {
-        if (currentCandy != null) return;
-
-        Vector2 spawnPos = GetSafCandyPosition();
-        currentCandy = Instantiate(candyPrefabs, spawnPos, Quaternion.identity);
-        Candy.Instance.gameObject.SetActive(true);
-    }
-
-    private Vector2 GetSafCandyPosition()
-    {
-        float margin = 1.5f;
-        float minX = Camera.main.ViewportToWorldPoint(new Vector3(0, 0)).x + margin;
-        float maxX = Camera.main.ViewportToWorldPoint(new Vector3(1, 0)).x - margin;
-        float minY = Camera.main.ViewportToWorldPoint(new Vector3(0, 0)).y + margin;
-        float maxY = Camera.main.ViewportToWorldPoint(new Vector3(0, 1)).y - margin;
-
-        Vector2 candidatePosition;
-        int safetyCounter = 0;
-
-        do
+        if (spawnPoints == null || spawnPoints.Length == 0)
         {
-            candidatePosition = new Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
-            safetyCounter++;
+            return;
         }
-        while (Vector2.Distance(candidatePosition, lastCandyPosition) < minDistanceBetweenCandies && safetyCounter < 50);
 
-        lastCandyPosition = candidatePosition;
+        // Supprime l'ancien bonbon s'il existe
+        if (currentCandy != null)
+        {
+            Destroy(currentCandy);
+            currentCandy = null;
+        }
 
-        return candidatePosition;
-    }
+        // Crée une liste temporaire d’indices disponibles
+        List<int> availableIndices = new List<int>();
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            if (i != lastIndex) // On évite la répétition immédiate
+                availableIndices.Add(i);
+        }
 
+        // Si tous les indices ont été exclus (ex: 1 seul point), on autorise la répétition
+        if (availableIndices.Count == 0)
+        {
+            availableIndices.Add(lastIndex);
+        }
 
-    // Gestion bonbons 2
-    public void SpawnNewCandy()
-    {
-        Vector3 spawnPosition = GetRandomCandyPosition();
-        Instantiate(candyPrefab, spawnPosition, Quaternion.identity);
-        Candy.Instance.gameObject.SetActive(true);
-    }
+        // Choisir un index aléatoire parmi ceux disponibles
+        int chosenIndex = availableIndices[Random.Range(0, availableIndices.Count)];
+        lastIndex = chosenIndex;
 
-    private Vector3 GetRandomCandyPosition()
-    {
-        float y = Random.Range(-3f, 3f);
-        float x = -2f;
-   
-        return new Vector3(x, y, 0f);
+        Transform spawnTransform = spawnPoints[chosenIndex];
+
+        currentCandy = Instantiate(candyPrefabs, spawnTransform.position, Quaternion.identity);
     }
 
     public void ShowGameOver()
     {
-        // gameOverText.gameObject.SetActive(true);
-
-        //gameOverUI.SetActive(true);
-
         int currentScore = score;
         int bestScore = PlayerPrefs.GetInt("BestScore", 0);
 
@@ -188,15 +164,8 @@ public class GameManager : MonoBehaviour
 
     public void AddScore()
     {
-        // score++;
-        // UpdateScoreText();
         IncreaseScore(1);
     }
-
-    //public void ClearCandy()
-    //{
-    //    currentCandy = null;
-    //}
 
     public void IncreaseScore(int amount)
     {
@@ -264,9 +233,6 @@ public class GameManager : MonoBehaviour
             // Augmenter la vitesse
             currentSpikesToActivate = Mathf.Min(currentSpikesToActivate + 1, 7);
             BirdController.Instance.IncreaseSpeed(speedIncreaseAmount);
-
-            // Augmenter le nombre de spikes à activer
-            // currentSpikesToActivate++;
         }
     }
 
@@ -278,17 +244,12 @@ public class GameManager : MonoBehaviour
         float duration = 1.5f; // Durée de l'animation
         float elapsed = 0.5f;
 
-        // spike.transform.position = from;
-
         while (elapsed < duration)
         {
             spike.transform.localPosition = Vector3.Lerp(from, to, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
-
-        // spike.transform.position = to;
-
         spike.SetActive(false);
     }
 }

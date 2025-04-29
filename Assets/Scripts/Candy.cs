@@ -15,11 +15,8 @@ public class Candy : MonoBehaviour
         {
             GameManager.Instance.IncreaseScore(1);
             GameManager.Instance.PlaySound(GameManager.Instance.CandySound);
-            gameObject.SetActive(false);
-            // GameManager.Instance.ClearCandy();
-            GameManager.Instance.TrySpawnCandy();
-            // GameManager.Instance.SpawnNewCandy();
-
         }
+        Destroy(gameObject);
+        GameManager.Instance.SpawnCandyAtRandomPoint();
     }
 }
