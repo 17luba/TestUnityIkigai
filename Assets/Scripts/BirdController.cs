@@ -1,6 +1,7 @@
 using DG.Tweening.Core.Easing;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class BirdController : MonoBehaviour
 {
@@ -58,8 +59,6 @@ public class BirdController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("wall"))
         {
-            GameManager.Instance.PlaySound(GameManager.Instance.wallHitSound);
-
             // Determiner le mur actuel
             WallSide currentWall = (collision.transform.position.x < 0) ? WallSide.Left : WallSide.Right;
 
@@ -93,7 +92,11 @@ public class BirdController : MonoBehaviour
             lastWallTouched = hittingRightWall ? WallSide.Right : WallSide.Left;
 
             // Score
-            GameManager.Instance.AddScore();
+            if (!isDead)
+            {
+                GameManager.Instance.AddScore();
+                GameManager.Instance.PlaySound(GameManager.Instance.wallHitSound);
+            }
             GameManager.Instance.IncreaseDifficulty();
         }
 
@@ -116,12 +119,24 @@ public class BirdController : MonoBehaviour
         if (isDead) return;
 
         isDead = true;
+
+        int bestScore = PlayerPrefs.GetInt("BestScore", 0);
+        if (GameManager.Instance.score > bestScore)
+        {
+            PlayerPrefs.SetInt("BestScore", GameManager.Instance.score);
+            PlayerPrefs.Save();
+            GameManager.Instance.bestScoreText.text = GameManager.Instance.score.ToString();
+        }
+        else
+        {
+            GameManager.Instance.bestScoreText.text = bestScore.ToString();
+        }
+
         rb.velocity = Vector2.zero;
         rb.gravityScale = 1;
         animator.SetTrigger("IsDead");
         GameManager.Instance.ShowGameOver();
         GameManager.Instance.PlaySound(GameManager.Instance.deathSound);
-        // Invoke(nameof(ReloadScene), 5f);
 
        // Appliquer le rebon aleatoire
         rb.velocity = new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
@@ -144,9 +159,4 @@ public class BirdController : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
     }
-
-    //void ReloadScene()
-    //{
-    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    //}
 }

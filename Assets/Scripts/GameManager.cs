@@ -12,16 +12,22 @@ public class GameManager : MonoBehaviour
     [Header("Gestion de score")]
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI bestScoreText;
-    // public TextMeshProUGUI gameOverText;
+    public TextMeshProUGUI affichageScoreText;
+    [SerializeField] private GameObject newBestText;
+    public TextMeshProUGUI gameOverText;
+
+    public GameObject floatingTextPrefab;
+    public RectTransform floatingTextParent; // Canva
 
     [Header("UI")]
     public GameObject replayButton;
+    private bool isGameOver = false;
 
     [Header("Obstacles")]
     public GameObject[] leftWallSpikes;
     public GameObject[] rightWallSpikes;
 
-    private int score = 0;
+    public int score = 0;
 
     [Header("Gestion de son")]
     public AudioSource audioSource;
@@ -58,15 +64,24 @@ public class GameManager : MonoBehaviour
         // PlayerPrefs.DeleteKey("BestScore");
 
         // Afficher le meilleur score
-        int best = PlayerPrefs.GetInt("BestScore", 0);
-        bestScoreText.text = $"Best score : {best}";
-        bestScoreText.gameObject.SetActive(false);
+        //int best = PlayerPrefs.GetInt("BestScore", 0);
+        //bestScoreText.text = $"Best score : {best}";
+        //bestScoreText.gameObject.SetActive(false);
 
         replayButton.SetActive(false);
 
         PlaySound(startSound);
 
         SpawnCandyAtRandomPoint();
+    }
+
+    public void ShowFlotingText(Vector3 worldPosition)
+    {
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
+
+        GameObject textG0 = Instantiate(floatingTextPrefab, screenPos, Quaternion.identity ,floatingTextParent);
+        Debug.Log("FloatingText instancié !");
+        textG0.GetComponent<FloatingText>().SetText("+1");
     }
 
     // Gestion des bonbons
@@ -109,19 +124,27 @@ public class GameManager : MonoBehaviour
 
     public void ShowGameOver()
     {
+        isGameOver = true;
+
         int currentScore = score;
         int bestScore = PlayerPrefs.GetInt("BestScore", 0);
+        bool isNewBest = false;
 
         if (currentScore > bestScore)
         {
             PlayerPrefs.SetInt("BestScore", currentScore);
             PlayerPrefs.Save();
             bestScoreText.text = currentScore.ToString();
+            isNewBest = true;
         }
 
         bestScoreText.text = $"Best : {bestScore}";
+        affichageScoreText.text = $"Score : {currentScore}";
+        affichageScoreText.gameObject.SetActive(true);
         bestScoreText.gameObject.SetActive(true);
         replayButton.SetActive(true);
+        newBestText.SetActive(isNewBest);
+        gameOverText.gameObject.SetActive(true);
     }
 
     public void HideSpikes()
@@ -169,6 +192,8 @@ public class GameManager : MonoBehaviour
 
     public void IncreaseScore(int amount)
     {
+        if (isGameOver) return;
+
         score += amount;
         UpdateScoreText();
         currentCandy = null; // Détruire le bonbon après l'avoir mangé

@@ -14,6 +14,7 @@ public class Candy : MonoBehaviour
         if (other.CompareTag("Player") && !BirdController.Instance.isDead)
         {
             GameManager.Instance.IncreaseScore(1);
+            GameManager.Instance.ShowFlotingText(transform.position);
             GameManager.Instance.PlaySound(GameManager.Instance.CandySound);
         }
         Destroy(gameObject);
