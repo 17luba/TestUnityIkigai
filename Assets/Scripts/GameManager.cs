@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     public GameObject replayButton;
+    public GameObject menuButton;
     private bool isGameOver = false;
 
     [Header("Obstacles")]
@@ -143,6 +144,7 @@ public class GameManager : MonoBehaviour
         affichageScoreText.gameObject.SetActive(true);
         bestScoreText.gameObject.SetActive(true);
         replayButton.SetActive(true);
+        menuButton.SetActive(true);
         newBestText.SetActive(isNewBest);
         gameOverText.gameObject.SetActive(true);
     }
@@ -224,6 +226,11 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Replay clicked !");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void OnMenuButtonCliked()
+    {
+        SceneManager.LoadScene("Menu");
     }
 
     public void PlaySound(AudioClip clip)
