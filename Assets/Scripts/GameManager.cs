@@ -66,9 +66,9 @@ public class GameManager : MonoBehaviour
 
         replayButton.SetActive(false);
 
-        PlaySound(startSound);
+        // PlaySound(startSound);
 
-        SpawnCandyAtRandomPoint();
+        // SpawnCandyAtRandomPoint();
     }
 
     public void ShowFlotingText(Vector3 worldPosition)

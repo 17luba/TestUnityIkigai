@@ -23,6 +23,9 @@ public class BirdController : MonoBehaviour
         None
     }
 
+    private int wallHitCount = 0;
+    private bool candyAreActive = false;
+
     private WallSide lastWallTouched;
 
     void Start()
@@ -61,6 +64,14 @@ public class BirdController : MonoBehaviour
         {
             // Determiner le mur actuel
             WallSide currentWall = (collision.transform.position.x < 0) ? WallSide.Left : WallSide.Right;
+
+            // Activer les bonbons après 5 rebonds sur les murs
+            wallHitCount++;
+            if (wallHitCount >= 5 && !candyAreActive)
+            {
+                candyAreActive = true;
+                GameManager.Instance.SpawnCandyAtRandomPoint();
+            }
 
 
             if (lastWallTouched != WallSide.None && lastWallTouched != currentWall)
@@ -106,7 +117,7 @@ public class BirdController : MonoBehaviour
         }
     }
 
-    void Flip()
+    public void Flip()
     {
         facingRight = !facingRight;
         Vector3 localScale = transform.localScale;
