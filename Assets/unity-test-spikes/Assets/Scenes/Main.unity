@@ -3620,6 +3620,7 @@ MonoBehaviour:
   deathSound: {fileID: 8300000, guid: d5128ccc3e4fb71459e944f82df753a5, type: 3}
   startSound: {fileID: 8300000, guid: df5cf7a5134e35143b370c3a910c13f4, type: 3}
   CandySound: {fileID: 8300000, guid: ce40c0abdc5ee2c4da2022b1f33b9743, type: 3}
+  menuSound: {fileID: 8300000, guid: dca8ee72b0f6c7049bc36efd87338b15, type: 3}
   baseSpikesToActivate: 2
   difficultyIncrementEvery: 5
   speedIncreaseAmount: 0.5

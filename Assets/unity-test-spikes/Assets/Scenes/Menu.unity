@@ -613,6 +613,7 @@ GameObject:
   m_Component:
   - component: {fileID: 426961870}
   - component: {fileID: 426961871}
+  - component: {fileID: 426961872}
   m_Layer: 0
   m_Name: MainMenuManager
   m_TagString: Untagged
@@ -652,6 +653,20 @@ MonoBehaviour:
   bestScoreText: {fileID: 1457656102}
   soundToggle: {fileID: 1335267526}
   versionText: {fileID: 733700916}
+--- !u!114 &426961872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 426961869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d204f30c8991243af68e7efd00cc81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuMusic: {fileID: 1026820295}
+  gameMusic: {fileID: 4958513213371601954, guid: 801518afbdc43f24397a4c3a4c72b277, type: 3}
 --- !u!1 &437302175
 GameObject:
   m_ObjectHideFlags: 0
@@ -1788,6 +1803,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 992012757}
   m_CullTransparentMesh: 1
+--- !u!82 &1026820295 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5938060359822432175, guid: 8c82d2345f569ec4584c9f3e8e406cd1, type: 3}
+  m_PrefabInstance: {fileID: 5938060360107899003}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1068299772
 GameObject:
   m_ObjectHideFlags: 0
@@ -2976,6 +2996,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: audioSourceMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 5938060359822432168, guid: 8c82d2345f569ec4584c9f3e8e406cd1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5938060359822432174, guid: 8c82d2345f569ec4584c9f3e8e406cd1, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -3020,5 +3044,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5938060359822432175, guid: 8c82d2345f569ec4584c9f3e8e406cd1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5938060359822432175, guid: 8c82d2345f569ec4584c9f3e8e406cd1, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: dca8ee72b0f6c7049bc36efd87338b15, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c82d2345f569ec4584c9f3e8e406cd1, type: 3}

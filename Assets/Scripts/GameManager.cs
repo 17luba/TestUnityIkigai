@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Gestion de son")]
     public AudioSource audioSource;
-    public AudioClip jumpSound, wallHitSound, deathSound, startSound, CandySound;
+    public AudioClip jumpSound, wallHitSound, deathSound, startSound, CandySound; //menuSound
 
     [Header("Gestion de dificulté")]
     private float bouncesCount = 0f;
@@ -63,11 +63,6 @@ public class GameManager : MonoBehaviour
         UpdateScoreText();
 
         // PlayerPrefs.DeleteKey("BestScore");
-
-        // Afficher le meilleur score
-        //int best = PlayerPrefs.GetInt("BestScore", 0);
-        //bestScoreText.text = $"Best score : {best}";
-        //bestScoreText.gameObject.SetActive(false);
 
         replayButton.SetActive(false);
 
@@ -230,6 +225,12 @@ public class GameManager : MonoBehaviour
 
     public void OnMenuButtonCliked()
     {
+        var audioManager = GameObject.Find("MainMenuManager");
+        if (audioManager != null)
+        {
+           Destroy(audioManager);
+        }
+
         SceneManager.LoadScene("Menu");
     }
 

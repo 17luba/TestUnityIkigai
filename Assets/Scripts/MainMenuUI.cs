@@ -15,18 +15,17 @@ public class MainMenuUI : MonoBehaviour
 
     void Start()
     {
+        // GameManager.Instance.PlaySound(GameManager.Instance.menuSound);
+
         optionsPanel.SetActive(false);
 
+        
         // Charger et afficher le meilleur score
         int bestScore = PlayerPrefs.GetInt("BestScore", 0);
         bestScoreText.text = bestScore.ToString("D2");
 
-        // StartCoroutine(InitSoundToggle());
-
         soundToggle.isOn = AudioManager.Instance.IsMusicOn();
         soundToggle.onValueChanged.AddListener(OnToggleSound);
-
-        Debug.Log("Menu Buttons found: " + menuButtons);
 
 
         if (menuButtons == null)
@@ -64,16 +63,6 @@ public class MainMenuUI : MonoBehaviour
     {
         AudioManager.Instance.SetMusicState(isOn);
     }
-
-    //public IEnumerator InitSoundToggle()
-    //{
-    //    while (AudioManager.Instance == null)
-    //    {
-    //        yield return null;
-    //    }
-    //    soundToggle.isOn = AudioManager.Instance.IsMusicOn();
-    //    soundToggle.onValueChanged.AddListener(OnToggleSound);
-    //}
 
     public void QuitGame()
     {
