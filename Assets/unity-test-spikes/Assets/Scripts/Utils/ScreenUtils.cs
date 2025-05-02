@@ -10,9 +10,18 @@ namespace Ikigai.DontTouchTheSpikes.Utils
 {
     public static class ScreenUtils
     {
+
+        private static readonly Vector2Int ASPECT =
+#if UNITY_ANDROID
+            new(9, 18);
+#else
+    new(9, 16);
+#endif
+
+
 #if UNITY_STANDALONE
         private const int HEIGHT = 960;
-        private static readonly Vector2Int ASPECT = new(9, 16);
+        // private static readonly Vector2Int ASPECT = new(9, 16);
 
         // Automatically set screen resolution when launching the app
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -29,7 +38,7 @@ namespace Ikigai.DontTouchTheSpikes.Utils
 
 #if UNITY_EDITOR
         // ReSharper disable PossibleNullReferenceException
-        
+
         // From https://gist.github.com/Biodam/b0616918ea5c50c2c9e4b16e5bb1034b
         [InitializeOnLoad]
         internal static class GameViewUtils
@@ -59,10 +68,10 @@ namespace Ikigai.DontTouchTheSpikes.Utils
             {
                 if (state != PlayModeStateChange.EnteredPlayMode)
                     return;
-                
+
                 if (!(Mathf.Abs((float)Screen.width / Screen.height - (float)ASPECT.x / ASPECT.y) > .001f))
                     return;
-                
+
                 try
                 {
                     ApplyDefaultRatio();
